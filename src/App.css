@@ -30,7 +30,7 @@
   background-color: #c2c2c2;
   height: 90vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -52,15 +52,15 @@
   flex-direction: row;
 }
 .ScatterGraphBox-wrapper{
-  width: 100vw;
+  width: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .ScatterGraphBox {
-  padding: 0.5em 1em;
-  margin: 2em 0;
+  padding: 0;
+  margin: 0 0;
   font-weight: bold;
   border: solid 3px #000000;
   width: 80vw;
@@ -69,6 +69,24 @@
   max-width: 80vh;
   position: relative;
 }
+
+.left-sidebar {
+  background-color: #c2c2c2;
+  margin-left: 100px;
+}
+
+.right-sidebar {
+  margin-left: 100px;
+  border: solid 1px #282c34;
+}
+
+.sidebar-wrapper {
+  width: 10vw;
+  height: 80vw;
+  max-height: 80vh;
+  max-width: 80vh;
+}
+
 .ScatterGraphBox p {
   margin: 0; 
   padding: 0;
@@ -100,4 +118,17 @@
   font-size: 12px;
   user-select: none;
   z-index: 100;
+}
+
+.perClasses {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.perClasses p {
+  margin: 0;
+  margin-left: 5px;
+  font-size: 24px;
 }

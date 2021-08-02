@@ -3,17 +3,19 @@ import { isConstructorDeclaration } from 'typescript';
 import {LeftSidebar, RightSidebar} from './Sidebar';
 
 
-type PointPorps = {
+type PointProps = {
     leftPercent: number,
     topPercent: number,
     label: string,
     id: number,
+}
+
+type DisplayPointProps = PointProps & {
     color: string
 }
 
-
-const DisplayLable = React.memo((props: PointPorps):JSX.Element => {
-    const {leftPercent, topPercent, label, id, color} = props;
+const DisplayLable = React.memo((props: PointProps):JSX.Element => {
+    const {leftPercent, topPercent, label, id} = props;
     return (
         <div className="ScatterGraphBox-wrapper">
             <p style={{position: 'absolute', top: `${topPercent}%`, left: `${leftPercent}%`}} className="label">{label}</p>
@@ -22,7 +24,7 @@ const DisplayLable = React.memo((props: PointPorps):JSX.Element => {
 });
 
 
-const DisplayPoint = React.memo((props: PointPorps):JSX.Element => {
+const DisplayPoint = React.memo((props: DisplayPointProps):JSX.Element => {
     const {leftPercent, topPercent, label, id, color} = props;
     const [isHover, setHover] = useState(false);
     const [isClicked, setClicked] = useState(false);
@@ -30,22 +32,23 @@ const DisplayPoint = React.memo((props: PointPorps):JSX.Element => {
     return (
         <div className="ScatterGraphBox-wrapper">
             <div className="circle" style={{backgroundColor: color, position: 'absolute', top: `${topPercent}%`, left: `${leftPercent}%`}}　onMouseOver={() => setHover(true)} onMouseOut={() => setHover(false)} onClick={() => setClicked((prevState) => !prevState)}></div>
-            {(isHover || isClicked) && <DisplayLable leftPercent={leftPercent+1} topPercent={topPercent} label={label} id={id} color={color}/>}
+            {(isHover || isClicked) && <DisplayLable leftPercent={leftPercent+1} topPercent={topPercent} label={label} id={id} />}
         </div>
     )
 })
 
 type DisplayScatterGraphByPerClassProps = {
-    pointList: Array<PointPorps>,
+    pointList: Array<PointProps>,
+    color: string
 }
 
 const DisplayScatterGraphByPerClass = (props: DisplayScatterGraphByPerClassProps) => {
-    const { pointList } = props;
+    const { pointList, color } = props;
     return (
         <>
         {pointList.map((pointData) => {
             return (
-                <DisplayPoint leftPercent={pointData.leftPercent} topPercent={pointData.topPercent} label={pointData.label} key={pointData.id} id={pointData.id} color={pointData.color} />
+                <DisplayPoint leftPercent={pointData.leftPercent} topPercent={pointData.topPercent} label={pointData.label} key={pointData.id} id={pointData.id} color={color} />
             )
         })}
         </>
@@ -53,12 +56,16 @@ const DisplayScatterGraphByPerClass = (props: DisplayScatterGraphByPerClassProps
 }
 
 type DisplayScatterGraphProps = {
-    pointLists: Array<Array<PointPorps>>,
+    pointLists: Array<Array<PointProps>>,
     canDisplay: Array<boolean>,
 }
 
+
+
+
 const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
     const { pointLists, canDisplay } = props;
+    const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
     return (
         <div className="ScatterGraphBox-wrapper">
             <div className="ScatterGraphBox">
@@ -66,7 +73,7 @@ const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
                 pointLists.map((pointList, idx) => {
 
                     return (
-                    canDisplay[idx] && <DisplayScatterGraphByPerClass pointList={pointList} key={idx}/>
+                    canDisplay[idx] && <DisplayScatterGraphByPerClass pointList={pointList} key={idx} color={idx_to_color[idx]}/>
                     )
                 })
                 }
@@ -77,9 +84,9 @@ const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
 
 
 const MainCompornet = () => {
-    const data:Array<Array<PointPorps>> = [[{leftPercent: 10, topPercent: 20, label: "今日は天皇とBBQ", id: 0, color: "blue"}, {leftPercent: 20, topPercent: 20, label: "今日は天皇と海水浴", id: 1, color: "blue"}], [{leftPercent: 50, topPercent: 80, label: "今日は彼女とBBQ", id: 3, color: "red"}, {leftPercent: 60, topPercent: 70, label: "今日は彼女と海水浴", id: 4, color: "red"}]]
+    const data:Array<Array<PointProps>> = [[{leftPercent: 10, topPercent: 30.9, label: "今日は天皇とBBQ", id: 0}, {leftPercent: 20, topPercent: 30, label: "今日は天皇と海水浴", id: 1}], [{leftPercent: 50, topPercent: 80, label: "今日は彼女とBBQ", id: 3}, {leftPercent: 60, topPercent: 70, label: "今日は彼女と海水浴", id: 4}]]
     const classLabels = ["H28", "H29", "H30", "R01"]
-    const colors = ["blue", "red", "yellow", "green"]
+    
     const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, false, true])
     console.log(canDisplay)
     return (
@@ -89,7 +96,7 @@ const MainCompornet = () => {
             </div>
             <DisplayScatterGraph pointLists={data} canDisplay={canDisplay}/>
             <div className="right-sidebar">
-                <RightSidebar classLabels={classLabels} colors={colors} canDisplay={canDisplay} setCanDisplay={setCanDisplay} />
+                <RightSidebar classLabels={classLabels} canDisplay={canDisplay} setCanDisplay={setCanDisplay} />
             </div>
         </>
     )

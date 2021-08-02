@@ -1,5 +1,7 @@
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox';
+import idx_to_color from './config';
+
 
 const LeftSidebar = () => {
     return (
@@ -41,19 +43,20 @@ const DisplayLegend = React.memo((props:DisplayLegendProps) => {
 
 type RightSidebaprops = {
     classLabels: Array<string>,
-    colors: Array<string>,
     canDisplay: Array<boolean>,
     setCanDisplay: (params: Array<boolean>) => void
 }
 
 const RightSidebar = (props: RightSidebaprops) => {
-    const {classLabels, colors, canDisplay, setCanDisplay} = props; 
+    const {classLabels, canDisplay, setCanDisplay} = props; 
+    const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
     return (
         <div className="sidebar-wrapper">
         <div style={{color: "black"}}>凡例</div>
         {
             classLabels.map((classLabel, index) => {
-                return <DisplayLegend classLabel={classLabel} color={colors[index]} checked={canDisplay} setCanDisplay={setCanDisplay} index={index}/>
+                console.log(index)
+                return <DisplayLegend classLabel={classLabel} color={idx_to_color[index]} checked={canDisplay} setCanDisplay={setCanDisplay} index={index} />
             }
             )
         }

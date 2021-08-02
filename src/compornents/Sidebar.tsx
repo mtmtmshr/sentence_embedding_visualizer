@@ -2,10 +2,16 @@ import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox';
 
 
-const LeftSidebar = () => {
+type LeftSidebaprops = {
+    setInitialApper: (params: boolean) => any
+}
+
+const LeftSidebar = (props: LeftSidebaprops) => {
+    const { setInitialApper } = props;
     return (
         <div className="sidebar-wrapper">
-            
+            <button onClick={()=>setInitialApper(true)}>ラベルを全表示</button>
+            <button onClick={()=>setInitialApper(false)}>ラベルを非表示</button>
         </div>
     )
 }
@@ -46,7 +52,7 @@ type RightSidebaprops = {
     setCanDisplay: (params: Array<boolean>) => void
 }
 
-const RightSidebar = (props: RightSidebaprops) => {
+const RightSidebar = React.memo((props: RightSidebaprops) => {
     const {classLabels, canDisplay, setCanDisplay} = props; 
     const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
     return (
@@ -54,13 +60,12 @@ const RightSidebar = (props: RightSidebaprops) => {
         <div style={{color: "black"}}>凡例</div>
         {
             classLabels.map((classLabel, index) => {
-                console.log(index)
-                return <DisplayLegend classLabel={classLabel} color={idx_to_color[index]} checked={canDisplay} setCanDisplay={setCanDisplay} index={index} />
+                return <DisplayLegend classLabel={classLabel} color={idx_to_color[index]} checked={canDisplay} setCanDisplay={setCanDisplay} index={index} key={index} />
             }
             )
         }
         </div>
     )
-}
+})
 
 export {LeftSidebar, RightSidebar}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { isConstructorDeclaration } from 'typescript';
 import {LeftSidebar, RightSidebar} from './Sidebar';
 
@@ -12,6 +12,7 @@ type PointProps = {
 
 type DisplayPointProps = PointProps & {
     color: string
+    initialClicked: boolean
 }
 
 const DisplayLable = React.memo((props: PointProps):JSX.Element => {
@@ -25,10 +26,14 @@ const DisplayLable = React.memo((props: PointProps):JSX.Element => {
 
 
 const DisplayPoint = React.memo((props: DisplayPointProps):JSX.Element => {
-    const {leftPercent, topPercent, label, id, color} = props;
+    const {leftPercent, topPercent, label, id, color, initialClicked} = props;
     const [isHover, setHover] = useState(false);
     const [isClicked, setClicked] = useState(false);
 
+    useEffect(() => {
+        setClicked(initialClicked)
+    }, [initialClicked])
+    console.log(isHover)
     return (
         <div className="ScatterGraphBox-wrapper">
             <div className="circle" style={{backgroundColor: color, position: 'absolute', top: `${topPercent}%`, left: `${leftPercent}%`}}　onMouseOver={() => setHover(true)} onMouseOut={() => setHover(false)} onClick={() => setClicked((prevState) => !prevState)}></div>
@@ -40,15 +45,16 @@ const DisplayPoint = React.memo((props: DisplayPointProps):JSX.Element => {
 type DisplayScatterGraphByPerClassProps = {
     pointList: Array<PointProps>,
     color: string
+    initialAppear: boolean
 }
 
 const DisplayScatterGraphByPerClass = (props: DisplayScatterGraphByPerClassProps) => {
-    const { pointList, color } = props;
+    const { pointList, color, initialAppear } = props;
     return (
         <>
         {pointList.map((pointData) => {
             return (
-                <DisplayPoint leftPercent={pointData.leftPercent} topPercent={pointData.topPercent} label={pointData.label} key={pointData.id} id={pointData.id} color={color} />
+                <DisplayPoint leftPercent={pointData.leftPercent} topPercent={pointData.topPercent} label={pointData.label} key={pointData.id} id={pointData.id} color={color} initialClicked={initialAppear} />
             )
         })}
         </>
@@ -58,13 +64,14 @@ const DisplayScatterGraphByPerClass = (props: DisplayScatterGraphByPerClassProps
 type DisplayScatterGraphProps = {
     pointLists: Array<Array<PointProps>>,
     canDisplay: Array<boolean>,
+    initialAppear: boolean,
 }
 
 
 
 
 const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
-    const { pointLists, canDisplay } = props;
+    const { pointLists, canDisplay, initialAppear } = props;
     const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
     return (
         <div className="ScatterGraphBox-wrapper">
@@ -73,7 +80,7 @@ const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
                 pointLists.map((pointList, idx) => {
 
                     return (
-                    canDisplay[idx] && <DisplayScatterGraphByPerClass pointList={pointList} key={idx} color={idx_to_color[idx]}/>
+                    canDisplay[idx] && <DisplayScatterGraphByPerClass pointList={pointList} key={idx} color={idx_to_color[idx]} initialAppear={initialAppear} />
                     )
                 })
                 }
@@ -88,13 +95,14 @@ const MainCompornet = () => {
     const classLabels = ["H28", "H29", "H30", "R01"]
     
     const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, false, true])
-    console.log(canDisplay)
+    const [initialAppear, setInitialApper] = useState(false)
+
     return (
         <>
             <div className="left-sidebar">
-                <LeftSidebar />
+                <LeftSidebar setInitialApper={setInitialApper} />
             </div>
-            <DisplayScatterGraph pointLists={data} canDisplay={canDisplay}/>
+            <DisplayScatterGraph pointLists={data} canDisplay={canDisplay} initialAppear={initialAppear} />
             <div className="right-sidebar">
                 <RightSidebar classLabels={classLabels} canDisplay={canDisplay} setCanDisplay={setCanDisplay} />
             </div>

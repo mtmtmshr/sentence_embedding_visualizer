@@ -1,6 +1,5 @@
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox';
-import idx_to_color from './config';
 
 
 const LeftSidebar = () => {

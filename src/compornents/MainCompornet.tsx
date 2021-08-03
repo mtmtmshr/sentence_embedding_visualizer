@@ -91,12 +91,22 @@ const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
 
 
 const MainCompornet = () => {
-    const data:Array<Array<PointProps>> = [[{leftPercent: 10, topPercent: 30.9, label: "今日は天皇とBBQ", id: 0}, {leftPercent: 20, topPercent: 30, label: "今日は天皇と海水浴", id: 1}], [{leftPercent: 50, topPercent: 80, label: "今日は彼女とBBQ", id: 3}, {leftPercent: 60, topPercent: 70, label: "今日は彼女と海水浴", id: 4}]]
-    const classLabels = ["H28", "H29", "H30", "R01"]
-    
-    const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, false, true])
+const classLabels = ["H28", "H29", "H30", "R01"]
+    const [data, setData] = useState<Array<Array<PointProps>>>([[]])
+    const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, true, true])
     const [initialAppear, setInitialApper] = useState(false)
 
+    useEffect(() => {
+        fetch(`http://localhost:8000/post`, {method: 'POST'})
+       .then(res => res.json())
+       .then(d => {
+            setData(d)
+        })
+        .catch(error => {
+            console.log(error)
+        })  
+    }, [])
+    console.log(data)
     return (
         <>
             <div className="left-sidebar">

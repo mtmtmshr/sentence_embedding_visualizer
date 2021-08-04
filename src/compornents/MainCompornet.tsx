@@ -72,7 +72,7 @@ type DisplayScatterGraphProps = {
 
 const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
     const { pointLists, canDisplay, initialAppear } = props;
-    const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
+    const idx_to_color: { [key: number]: string; } = {0: "red", 1: "orange", 2: "yellow", 3: "green", 4: "purple", 5: "blue"}
     return (
         <div className="ScatterGraphBox-wrapper">
             <div className="ScatterGraphBox">
@@ -91,9 +91,10 @@ const DisplayScatterGraph = (props: DisplayScatterGraphProps) => {
 
 
 const MainCompornet = () => {
-const classLabels = ["H28", "H29", "H30", "R01"]
+    const classLabels = ["H28", "H29", "H30", "R01"]
+    //const classLabels = ["10, 20代", "30代", "40代", "50代", "60代", "70代〜"]
     const [data, setData] = useState<Array<Array<PointProps>>>([[]])
-    const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, true, true])
+    const [canDisplay, setCanDisplay] = useState<Array<boolean>>([true, true, true, true, true, true, true])
     const [initialAppear, setInitialApper] = useState(false)
 
     useEffect(() => {
@@ -106,12 +107,15 @@ const classLabels = ["H28", "H29", "H30", "R01"]
             console.log(error)
         })  
     }, [])
-    console.log(data)
+    
+
     return (
         <>
             <div className="left-sidebar">
                 <LeftSidebar setInitialApper={setInitialApper} />
             </div>
+            <button>年度別</button>
+            <button>年齢別</button>
             <DisplayScatterGraph pointLists={data} canDisplay={canDisplay} initialAppear={initialAppear} />
             <div className="right-sidebar">
                 <RightSidebar classLabels={classLabels} canDisplay={canDisplay} setCanDisplay={setCanDisplay} />

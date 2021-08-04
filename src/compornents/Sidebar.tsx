@@ -54,7 +54,7 @@ type RightSidebaprops = {
 
 const RightSidebar = React.memo((props: RightSidebaprops) => {
     const {classLabels, canDisplay, setCanDisplay} = props; 
-    const idx_to_color: { [key: number]: string; } = {0: "blue", 1: "red", 2: "yellow", 3: "green"}
+    const idx_to_color: { [key: number]: string; } = {0: "red", 1: "orange", 2: "yellow", 3: "green", 4: "purple", 5: "blue"}
     return (
         <div className="sidebar-wrapper">
         <div style={{color: "black"}}>凡例</div>
